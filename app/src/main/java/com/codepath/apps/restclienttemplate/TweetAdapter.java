@@ -3,6 +3,7 @@ package com.codepath.apps.restclienttemplate;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,8 +49,11 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         //get data according to the position
         Tweet tweet = mTweets.get(i);
 
-        //populate the views according to this data
-        viewHolder.tvUsername.setText(tweet.user.name);
+        //populate the view
+        String sourceString = "<b>" + tweet.user.name + "</b> " + " @" +  tweet.user.screenName + " • " + tweet.getRelativeTimeAgo(tweet.createdAt);
+        viewHolder.tvUsername.setText(Html.fromHtml(sourceString));
+
+        //viewHolder.tvUsername.setText(tweet.user.name + " @" +  tweet.user.screenName + " • " + tweet.getRelativeTimeAgo(tweet.createdAt));
         viewHolder.tvBody.setText(tweet.body);
 
         //show profile image
