@@ -1,10 +1,13 @@
 package com.codepath.apps.restclienttemplate;
 
-import android.support.v7.app.AppCompatActivity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -24,6 +27,9 @@ public class TimelineActivity extends AppCompatActivity {
     TweetAdapter tweetAdapter;
     ArrayList<Tweet> tweets;
     RecyclerView rvTweets;
+
+    //request code for startActivity
+    static final int COMPOSE_ACTIVITY_REQUEST= 1;  // The request code
 
 
     @Override
@@ -53,7 +59,7 @@ public class TimelineActivity extends AppCompatActivity {
         populateTimeline();
     }
 
-
+    //get timeline results and show it on the table
     private void populateTimeline() {
 
         //make network request to get Twitter data
@@ -104,5 +110,33 @@ public class TimelineActivity extends AppCompatActivity {
                 throwable.printStackTrace();
             }
         });
+    }
+
+
+    //action item in menu
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        //get timeline menu
+        getMenuInflater().inflate(R.menu.timeline, menu);
+
+        //get tweet button
+        MenuItem tweetItem = menu.findItem(R.id.miTweet);
+
+
+        return true;
+    }
+
+
+    //set actions for menu taps
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.miTweet) {
+            Intent i = new Intent(this, ComposeActivity.class);
+            startActivityForResult(i, COMPOSE_ACTIVITY_REQUEST);
+        }
+        return super.onOptionsItemSelected(item);
+
+
     }
 }

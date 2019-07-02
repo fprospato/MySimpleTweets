@@ -43,10 +43,17 @@ public class Tweet {
         try {
             long dateMillis = sf.parse(rawJsonDate).getTime();
             relativeDate = DateUtils.getRelativeTimeSpanString(dateMillis,
-                    System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS).toString();
+                    System.currentTimeMillis(), DateUtils.FORMAT_ABBREV_RELATIVE).toString();
         } catch (ParseException e) {
             e.printStackTrace();
         }
+
+        //set the correct format
+        String[] timeContents = relativeDate.split(" ");
+        if (timeContents.length == 3) {
+            relativeDate = timeContents[0] + ((timeContents[1].equals("minutes") || timeContents[1].equals("minute")) ? "m" : ((timeContents[1].equals("seconds") || timeContents[1].equals("second")) ? "s" : "h"));
+        }
+
 
         return relativeDate;
     }
