@@ -16,17 +16,18 @@ public class User {
     //constructor for Parcel
     public User() {}
 
-    //deserialize the JSON
+
+    /*
+     * deserialize the JSON
+     */
     public static User fromJSON(JSONObject json) throws JSONException {
         User user = new User();
 
-        //extract and fill values
         user.name = json.getString("name");
         user.uid = json.getLong("id");
         user.screenName = json.getString("screen_name");
         user.profileImageUrl = json.getString("profile_image_url_https");
 
-        //return the user
         return user;
     }
 }
