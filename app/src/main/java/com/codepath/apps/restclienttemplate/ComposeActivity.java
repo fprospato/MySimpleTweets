@@ -3,9 +3,12 @@ package com.codepath.apps.restclienttemplate;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.codepath.apps.restclienttemplate.models.Tweet;
@@ -23,10 +26,26 @@ public class ComposeActivity extends AppCompatActivity {
     //instances
     private TwitterClient client;
     EditText etTweetText;
+    TextView tvCharCount;
 
     //request code for startActivity
     static final int COMPOSE_ACTIVITY_OK= 1;  // The request code
 
+
+    //character counter
+    private final TextWatcher charTextWatcher= new TextWatcher() {
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+
+        //change char count
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            //This sets a textview to the current length
+            tvCharCount.setText(String.valueOf(280-s.length()));
+        }
+
+        public void afterTextChanged(Editable s) {
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,8 +55,12 @@ public class ComposeActivity extends AppCompatActivity {
         //get the client
         client = TwitterApp.getRestClient(this);
 
-        //get edit text
+        //get tweet text and char count
         etTweetText = findViewById(R.id.etTweetText);
+        tvCharCount = findViewById(R.id.tvCharCount);
+
+        //set watcher on tweet text
+        etTweetText.addTextChangedListener(charTextWatcher);
     }
 
 

@@ -149,10 +149,13 @@ public class TimelineActivity extends AppCompatActivity {
             Tweet tweet = data.getExtras().getParcelable("tweet");
 
             //add that Tweet model to our data source
-            tweets.add(tweet);
+            tweets.add(0, tweet);
 
             //notify the adapter that we've added and item
             tweetAdapter.notifyItemInserted(tweets.size()-1);
+
+            //scroll to the top
+            rvTweets.scrollToPosition(0);
         }
     }
 }
