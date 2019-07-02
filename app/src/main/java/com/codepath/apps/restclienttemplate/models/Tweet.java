@@ -54,7 +54,6 @@ public class Tweet {
             relativeDate = timeContents[0] + ((timeContents[1].equals("minutes") || timeContents[1].equals("minute")) ? "m" : ((timeContents[1].equals("seconds") || timeContents[1].equals("second")) ? "s" : "h"));
         }
 
-
         return relativeDate;
     }
 
