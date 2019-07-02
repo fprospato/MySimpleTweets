@@ -4,11 +4,13 @@ import android.text.format.DateUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.parceler.Parcel;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
+@Parcel
 public class Tweet {
 
     //list of attributes
@@ -16,6 +18,11 @@ public class Tweet {
     public long uid; //database ID for the tweet
     public User user;
     public String createdAt;
+
+
+    //constructor for tweet
+    public Tweet() {}
+
 
     //deserialize the JSON
     public static Tweet fromJSON(JSONObject jsonObject) throws JSONException {

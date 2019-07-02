@@ -2,6 +2,7 @@ package com.codepath.apps.restclienttemplate;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -121,14 +122,11 @@ public class TimelineActivity extends AppCompatActivity {
 
         //get tweet button
         MenuItem tweetItem = menu.findItem(R.id.miTweet);
-
-
         return true;
     }
 
 
     //set actions for menu taps
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.miTweet) {
@@ -136,7 +134,25 @@ public class TimelineActivity extends AppCompatActivity {
             startActivityForResult(i, COMPOSE_ACTIVITY_REQUEST);
         }
         return super.onOptionsItemSelected(item);
+    }
 
 
+    //getting sent tweet
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        //get tweet
+        if (resultCode == COMPOSE_ACTIVITY_REQUEST && requestCode == COMPOSE_ACTIVITY_REQUEST) {
+            //gwt the sent tweet
+            Tweet tweet = data.getExtras().getParcelable("tweet");
+
+            //add that Tweet model to our data source
+            tweets.add(tweet);
+
+            //notify the adapter that we've added and item
+            tweetAdapter.notifyItemInserted(tweets.size()-1);
+        }
     }
 }
