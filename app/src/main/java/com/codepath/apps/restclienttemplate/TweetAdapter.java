@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 
 import java.util.List;
@@ -50,12 +51,15 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
         Tweet tweet = mTweets.get(i);
 
-        String sourceString = "<b>" + tweet.user.name + "</b> " + " @" +  tweet.user.screenName + " • " + tweet.getRelativeTimeAgo(tweet.createdAt);
-        viewHolder.tvUsername.setText(Html.fromHtml(sourceString));
+        String sourceString = "<b>" + tweet.user.name + "</b>" +  " <font color=#808080>" + "@" +  tweet.user.screenName + " • " + tweet.getRelativeTimeAgo(tweet.createdAt) + "</font>";
+        viewHolder.tvUsername.setText(Html.fromHtml(sourceString, Html.FROM_HTML_MODE_LEGACY));
 
         viewHolder.tvBody.setText(tweet.body);
+        viewHolder.tvRetweet.setText(tweet.retweetCount);
+        viewHolder.tvFavorite.setText(tweet.favoriteCount);
 
         Glide.with(context).load(tweet.user.profileImageUrl)
+                .apply(RequestOptions.circleCropTransform())
                 .into(viewHolder.ivProfileImage);
     }
 
@@ -68,6 +72,8 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         public ImageView ivProfileImage;
         public TextView tvUsername;
         public TextView tvBody;
+        public TextView tvRetweet;
+        public TextView tvFavorite;
 
         public  ViewHolder(View itemView) {
             super(itemView);
@@ -75,6 +81,8 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
             ivProfileImage = itemView.findViewById(R.id.ivProfileImage);
             tvUsername = itemView.findViewById(R.id.tvUserName);
             tvBody = itemView.findViewById(R.id.tvBody);
+            tvRetweet = itemView.findViewById(R.id.tvRetweet);
+            tvFavorite = itemView.findViewById(R.id.tvFavorite);
         }
     }
 

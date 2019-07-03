@@ -8,6 +8,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,6 +28,7 @@ public class ComposeActivity extends AppCompatActivity {
     private TwitterClient client;
     EditText etTweetText;
     TextView tvCharCount;
+    ImageView ivBack;
 
 
     //request code for startActivity
@@ -59,6 +61,14 @@ public class ComposeActivity extends AppCompatActivity {
 
         etTweetText = findViewById(R.id.etTweetText);
         tvCharCount = findViewById(R.id.tvCharCount);
+        ivBack = findViewById(R.id.ivBack);
+
+        ivBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
 
         etTweetText.addTextChangedListener(charTextWatcher);
     }

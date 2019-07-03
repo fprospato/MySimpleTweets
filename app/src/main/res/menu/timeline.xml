@@ -2,10 +2,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-
     <item
         android:id="@+id/miTweet"
-        android:icon="@android:drawable/ic_input_add"
-        app:showAsAction="ifRoom"
-        android:title="Tweet"></item>
+        android:icon="@drawable/ic_vector_compose"
+        android:title="Tweet"
+        android:iconTint="#FFFFFF"
+        app:showAsAction="ifRoom">
+    </item>
+
 </menu>

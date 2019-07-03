@@ -18,6 +18,8 @@ public class Tweet {
     public long uid; //database ID for the tweet
     public User user;
     public String createdAt;
+    public String favoriteCount;
+    public String retweetCount;
 
 
     //constructor for Parcel
@@ -33,6 +35,8 @@ public class Tweet {
         tweet.body = jsonObject.getString("text");
         tweet.uid = jsonObject.getLong("id");
         tweet.createdAt = jsonObject.getString("created_at");
+        tweet.favoriteCount = jsonObject.getString("favorite_count");
+        tweet.retweetCount = jsonObject.getString("retweet_count");
 
         tweet.user = User.fromJSON(jsonObject.getJSONObject("user"));
 
