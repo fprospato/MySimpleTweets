@@ -7,7 +7,15 @@
         android:icon="@drawable/ic_vector_compose"
         android:title="Tweet"
         android:iconTint="#FFFFFF"
-        app:showAsAction="ifRoom">
-    </item>
+        app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/miActionProgress"
+        android:title="Loading..."
+        android:visible="false"
+        android:orderInCategory="100"
+        app:showAsAction="ifRoom"
+        app:actionLayout="@layout/action_view_progress" />
+
 
 </menu>

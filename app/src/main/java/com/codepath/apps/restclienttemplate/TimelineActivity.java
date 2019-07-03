@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -13,6 +14,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ProgressBar;
 
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -32,6 +34,8 @@ public class TimelineActivity extends AppCompatActivity {
 
     //instances
     private SwipeRefreshLayout swipeContainer;
+    MenuItem miActionProgressItem;
+    MenuItem tweetItem;
     private TwitterClient client;
     TweetAdapter tweetAdapter;
     ArrayList<Tweet> tweets;
@@ -59,8 +63,10 @@ public class TimelineActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.twitter_blue)));
 
-        DividerItemDecoration itemDecor = new DividerItemDecoration(rvTweets.getContext(), rvTweets.getContext().getResources().getConfiguration().orientation);
-        rvTweets.addItemDecoration(itemDecor);
+        DividerItemDecoration itemDecorVertical = new DividerItemDecoration(rvTweets.getContext(), 1);
+        DividerItemDecoration itemDecorHorizontal = new DividerItemDecoration(rvTweets.getContext(), 0);
+        rvTweets.addItemDecoration(itemDecorVertical);
+        rvTweets.addItemDecoration(itemDecorHorizontal);
 
         setupSwipeForReload();
 
@@ -74,9 +80,7 @@ public class TimelineActivity extends AppCompatActivity {
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                // Your code to refresh the list here.
-                // Make sure you call swipeContainer.setRefreshing(false)
-                // once the network request has completed successfully.
+                showProgressBar();
                 populateTimeline();
             }
         });
@@ -111,9 +115,11 @@ public class TimelineActivity extends AppCompatActivity {
                         tweetAdapter.notifyItemInserted(tweets.size()-1);
                         swipeContainer.setRefreshing(false);
                     } catch (JSONException e) {
+                        hideProgressBar();
                         e.printStackTrace();
                     }
                 }
+               hideProgressBar();
             }
 
             @Override
@@ -144,7 +150,6 @@ public class TimelineActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.timeline, menu);
 
-        MenuItem tweetItem = menu.findItem(R.id.miTweet);
         return true;
     }
 
@@ -156,11 +161,11 @@ public class TimelineActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.miTweet) {
             Intent i = new Intent(this, ComposeActivity.class);
+            i.putExtra("type", "new");
             startActivityForResult(i, COMPOSE_ACTIVITY_REQUEST);
         }
         return super.onOptionsItemSelected(item);
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -176,5 +181,28 @@ public class TimelineActivity extends AppCompatActivity {
             //scroll to the top
             rvTweets.scrollToPosition(0);
         }
+    }
+
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        // Store instance of the menu item containing progress
+        miActionProgressItem = menu.findItem(R.id.miActionProgress);
+        tweetItem = menu.findItem(R.id.miTweet);
+
+        // Extract the action-view from the menu item
+        ProgressBar v =  (ProgressBar) MenuItemCompat.getActionView(miActionProgressItem);
+        // Return to finish
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    public void showProgressBar() {
+        // Show progress item
+        miActionProgressItem.setVisible(true);
+    }
+
+    public void hideProgressBar() {
+        // Hide progress item
+        miActionProgressItem.setVisible(false);
     }
 }

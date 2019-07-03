@@ -28,6 +28,7 @@ public class ComposeActivity extends AppCompatActivity {
     private TwitterClient client;
     EditText etTweetText;
     TextView tvCharCount;
+    TextView tvReply;
     ImageView ivBack;
 
 
@@ -62,7 +63,14 @@ public class ComposeActivity extends AppCompatActivity {
         etTweetText = findViewById(R.id.etTweetText);
         tvCharCount = findViewById(R.id.tvCharCount);
         ivBack = findViewById(R.id.ivBack);
+        tvReply = findViewById(R.id.tvReply);
 
+        etTweetText.addTextChangedListener(charTextWatcher);
+
+        setupDesign();
+    }
+
+    private void setupDesign() {
         ivBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -70,7 +78,17 @@ public class ComposeActivity extends AppCompatActivity {
             }
         });
 
-        etTweetText.addTextChangedListener(charTextWatcher);
+        String type = getIntent().getStringExtra("type");
+        if (type.equals("reply")) {
+            String username = getIntent().getStringExtra("username");
+
+            etTweetText.setText(username);
+            etTweetText.setHint("Tweet your reply");
+
+            tvReply.setVisibility(View.VISIBLE);
+        } else {
+            tvReply.setVisibility(View.GONE);
+        }
     }
 
 

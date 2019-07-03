@@ -1,6 +1,7 @@
 package com.codepath.apps.restclienttemplate;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
@@ -20,7 +21,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
 
     //instances
     private List<Tweet> mTweets;
-    Context context;
+    static Context context;
 
     public TweetAdapter(List<Tweet> tweets) {
         mTweets = tweets;
@@ -53,6 +54,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
 
         String sourceString = "<b>" + tweet.user.name + "</b>" +  " <font color=#808080>" + "@" +  tweet.user.screenName + " • " + tweet.getRelativeTimeAgo(tweet.createdAt) + "</font>";
         viewHolder.tvUsername.setText(Html.fromHtml(sourceString, Html.FROM_HTML_MODE_LEGACY));
+        viewHolder.username = tweet.user.screenName;
 
         viewHolder.tvBody.setText(tweet.body);
         viewHolder.tvRetweet.setText(tweet.retweetCount);
@@ -74,6 +76,8 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         public TextView tvBody;
         public TextView tvRetweet;
         public TextView tvFavorite;
+        public ImageView ivComment;
+        String username;
 
         public  ViewHolder(View itemView) {
             super(itemView);
@@ -83,7 +87,22 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
             tvBody = itemView.findViewById(R.id.tvBody);
             tvRetweet = itemView.findViewById(R.id.tvRetweet);
             tvFavorite = itemView.findViewById(R.id.tvFavorite);
+            ivComment = itemView.findViewById(R.id.ivComment);
+
+            ivComment.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (username.length() > 0) {
+                        Intent i = new Intent(context, ComposeActivity.class);
+                        i.putExtra("type", "reply");
+                        i.putExtra("username", "@" + username);
+                        context.startActivity(i);
+                    }
+                }
+            });
         }
+
+
     }
 
 
