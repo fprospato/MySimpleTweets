@@ -41,7 +41,6 @@ public class ComposeActivity extends AppCompatActivity {
         }
 
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            //This sets a textview to the current length
             tvCharCount.setText(String.valueOf(280-s.length()));
         }
 
@@ -61,7 +60,6 @@ public class ComposeActivity extends AppCompatActivity {
         etTweetText = findViewById(R.id.etTweetText);
         tvCharCount = findViewById(R.id.tvCharCount);
 
-        //set watcher on tweet text
         etTweetText.addTextChangedListener(charTextWatcher);
     }
 

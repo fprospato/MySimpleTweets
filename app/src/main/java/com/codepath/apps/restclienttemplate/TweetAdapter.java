@@ -21,54 +21,49 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
     private List<Tweet> mTweets;
     Context context;
 
-
-    //pass the Tweets array in the constructor
     public TweetAdapter(List<Tweet> tweets) {
         mTweets = tweets;
     }
 
 
-    //for each row, inflate the layout and cache references into ViewHolder
+    /*
+     * for each row, inflate the layout and cache references into ViewHolder
+     */
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        //get context and layout inflator
         context = viewGroup.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
 
-        //inflate the tweet row
+
         View tweetView = inflater.inflate(R.layout.item_tweet, viewGroup, false);
         ViewHolder viewHolder = new ViewHolder(tweetView);
+
         return viewHolder;
     }
 
 
-    //bind the values based on the position of the element
+    /*
+     * bind the values based on the position of the element
+     */
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
-        //get data according to the position
         Tweet tweet = mTweets.get(i);
 
-        //populate the view
         String sourceString = "<b>" + tweet.user.name + "</b> " + " @" +  tweet.user.screenName + " • " + tweet.getRelativeTimeAgo(tweet.createdAt);
         viewHolder.tvUsername.setText(Html.fromHtml(sourceString));
 
-        //viewHolder.tvUsername.setText(tweet.user.name + " @" +  tweet.user.screenName + " • " + tweet.getRelativeTimeAgo(tweet.createdAt));
         viewHolder.tvBody.setText(tweet.body);
 
-        //show profile image
         Glide.with(context).load(tweet.user.profileImageUrl)
                 .into(viewHolder.ivProfileImage);
     }
 
-    //number of rows
     @Override
     public int getItemCount() {
         return mTweets.size();
     }
 
-
-    //create ViewHolder class
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public ImageView ivProfileImage;
         public TextView tvUsername;
@@ -77,10 +72,21 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         public  ViewHolder(View itemView) {
             super(itemView);
 
-            //perform the findViewById lookups
             ivProfileImage = itemView.findViewById(R.id.ivProfileImage);
             tvUsername = itemView.findViewById(R.id.tvUserName);
             tvBody = itemView.findViewById(R.id.tvBody);
         }
+    }
+
+
+    public void clear() {
+        mTweets.clear();
+        notifyDataSetChanged();
+    }
+
+
+    public void addAll(List<Tweet> list) {
+        mTweets.addAll(list);
+        notifyDataSetChanged();
     }
 }

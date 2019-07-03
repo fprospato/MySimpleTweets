@@ -3,6 +3,7 @@ package com.codepath.apps.restclienttemplate;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -27,10 +28,12 @@ public class TimelineActivity extends AppCompatActivity {
     public final static String TAG = "TimelineActivity";
 
     //instances
+    private SwipeRefreshLayout swipeContainer;
     private TwitterClient client;
     TweetAdapter tweetAdapter;
     ArrayList<Tweet> tweets;
     RecyclerView rvTweets;
+
 
     //request code for startActivity
     static final int COMPOSE_ACTIVITY_REQUEST= 1;  // The request code
@@ -50,7 +53,29 @@ public class TimelineActivity extends AppCompatActivity {
         tweetAdapter = new TweetAdapter(tweets);
         rvTweets.setAdapter(tweetAdapter);
 
+        setupSwipeForReload();
+
         populateTimeline();
+    }
+
+
+    private void setupSwipeForReload() {
+        swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
+
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // Your code to refresh the list here.
+                // Make sure you call swipeContainer.setRefreshing(false)
+                // once the network request has completed successfully.
+                populateTimeline();
+            }
+        });
+        // Configure the refreshing colors
+        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
     }
 
 
@@ -66,16 +91,16 @@ public class TimelineActivity extends AppCompatActivity {
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 Log.d(TAG, response.toString());
 
+                tweetAdapter.clear();
+
                 for (int i = 0; i < response.length(); i++) {
                     try {
-                        //convert each object to a Tweet model
                         Tweet tweet = Tweet.fromJSON(response.getJSONObject(i));
 
-                        //add that Tweet model to our data source
                         tweets.add(tweet);
 
-                        //notify the adapter that we've added and item
                         tweetAdapter.notifyItemInserted(tweets.size()-1);
+                        swipeContainer.setRefreshing(false);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
