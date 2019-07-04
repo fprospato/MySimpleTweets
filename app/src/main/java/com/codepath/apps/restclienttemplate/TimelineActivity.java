@@ -84,7 +84,7 @@ public class TimelineActivity extends AppCompatActivity {
                 populateTimeline();
             }
         });
-        // Configure the refreshing colors
+
         swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
@@ -186,13 +186,10 @@ public class TimelineActivity extends AppCompatActivity {
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        // Store instance of the menu item containing progress
         miActionProgressItem = menu.findItem(R.id.miActionProgress);
         tweetItem = menu.findItem(R.id.miTweet);
 
-        // Extract the action-view from the menu item
         ProgressBar v =  (ProgressBar) MenuItemCompat.getActionView(miActionProgressItem);
-        // Return to finish
         return super.onPrepareOptionsMenu(menu);
     }
 

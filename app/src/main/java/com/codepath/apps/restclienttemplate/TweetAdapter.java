@@ -2,6 +2,7 @@ package com.codepath.apps.restclienttemplate;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Movie;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
@@ -15,16 +16,19 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 
+import org.parceler.Parcels;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> {
 
     //instances
-    private List<Tweet> mTweets;
+    private ArrayList<Tweet> mTweets;
     static Context context;
 
-    public TweetAdapter(List<Tweet> tweets) {
-        mTweets = tweets;
+    public TweetAdapter(ArrayList<Tweet> tweets) {
+        this.mTweets = tweets;
     }
 
 
@@ -70,7 +74,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         return mTweets.size();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public ImageView ivProfileImage;
         public TextView tvUsername;
         public TextView tvBody;
@@ -100,8 +104,31 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
                     }
                 }
             });
+
+            itemView.setOnClickListener(this);
         }
 
+        @Override
+        public void onClick(View view) {
+            // get item position
+            int position = getAdapterPosition();
+
+            // check for valid position (actually is in the view)
+            if (position != RecyclerView.NO_POSITION) {
+
+                // get movie from the position (won't work if the class is static)
+                Tweet tweet = mTweets.get(position);
+
+                // create intent for the new activity
+                Intent intent = new Intent(context, DetailActivity.class);
+
+                // serialize the movie using parceler, use its short name as a key
+                intent.putExtra("tweet", Parcels.wrap(tweet));
+
+                // show the activity
+                context.startActivity(intent);
+            }
+        }
 
     }
 

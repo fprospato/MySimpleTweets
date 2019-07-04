@@ -70,4 +70,16 @@
         app:layout_constraintStart_toEndOf="@+id/ivBack"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <Button
+        android:id="@+id/btnBack"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="43dp"
+        android:layout_height="37dp"
+        android:layout_marginStart="2dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="1dp"
+        app:layout_constraintEnd_toStartOf="@+id/tvReply"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 </android.support.constraint.ConstraintLayout>

@@ -1,12 +1,15 @@
 package com.codepath.apps.restclienttemplate;
 
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -30,6 +33,7 @@ public class ComposeActivity extends AppCompatActivity {
     TextView tvCharCount;
     TextView tvReply;
     ImageView ivBack;
+    Button btnBack;
 
 
     //request code for startActivity
@@ -64,6 +68,7 @@ public class ComposeActivity extends AppCompatActivity {
         tvCharCount = findViewById(R.id.tvCharCount);
         ivBack = findViewById(R.id.ivBack);
         tvReply = findViewById(R.id.tvReply);
+        btnBack = findViewById(R.id.btnBack);
 
         etTweetText.addTextChangedListener(charTextWatcher);
 
@@ -71,7 +76,10 @@ public class ComposeActivity extends AppCompatActivity {
     }
 
     private void setupDesign() {
-        ivBack.setOnClickListener(new View.OnClickListener() {
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.twitter_blue)));
+
+        btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finish();
@@ -86,6 +94,8 @@ public class ComposeActivity extends AppCompatActivity {
             etTweetText.setHint("Tweet your reply");
 
             tvReply.setVisibility(View.VISIBLE);
+
+            etTweetText.requestFocus();
         } else {
             tvReply.setVisibility(View.GONE);
         }
