@@ -2,30 +2,38 @@ package com.codepath.apps.restclienttemplate;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Movie;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.codepath.apps.restclienttemplate.models.Tweet;
+import com.loopj.android.http.JsonHttpResponseHandler;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import cz.msebera.android.httpclient.Header;
 
 public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> {
 
     //instances
     private ArrayList<Tweet> mTweets;
     static Context context;
+    private TwitterClient client;
+
 
     public TweetAdapter(ArrayList<Tweet> tweets) {
         this.mTweets = tweets;
@@ -58,11 +66,23 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
 
         String sourceString = "<b>" + tweet.user.name + "</b>" +  " <font color=#808080>" + "@" +  tweet.user.screenName + " • " + tweet.getRelativeTimeAgo(tweet.createdAt) + "</font>";
         viewHolder.tvUsername.setText(Html.fromHtml(sourceString, Html.FROM_HTML_MODE_LEGACY));
-        viewHolder.username = tweet.user.screenName;
+        viewHolder.tweet = tweet;
 
         viewHolder.tvBody.setText(tweet.body);
         viewHolder.tvRetweet.setText(tweet.retweetCount);
         viewHolder.tvFavorite.setText(tweet.favoriteCount);
+
+        if (tweet.favorited.equals("true")) {
+            viewHolder.ivFavorite.setImageResource(R.drawable.ic_vector_heart);
+
+            //Twitter API does not give the like count for the first hour of the tweet post. This is just so the user can visually see that they have liked it
+            if (viewHolder.tvFavorite.getText().toString().equals("0")) {
+                viewHolder.tvFavorite.setText("1");
+            }
+
+        } else {
+            viewHolder.ivFavorite.setImageResource(R.drawable.ic_vector_heart_stroke);
+        }
 
         Glide.with(context).load(tweet.user.profileImageUrl)
                 .apply(RequestOptions.circleCropTransform())
@@ -81,7 +101,9 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         public TextView tvRetweet;
         public TextView tvFavorite;
         public ImageView ivComment;
-        String username;
+        public ImageView ivFavorite;
+        public Button btnRetweet;
+        Tweet tweet;
 
         public  ViewHolder(View itemView) {
             super(itemView);
@@ -92,16 +114,13 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
             tvRetweet = itemView.findViewById(R.id.tvRetweet);
             tvFavorite = itemView.findViewById(R.id.tvFavorite);
             ivComment = itemView.findViewById(R.id.ivComment);
+            btnRetweet = itemView.findViewById(R.id.btnRetweet);
+            ivFavorite = itemView.findViewById(R.id.ivFavorite);
 
-            ivComment.setOnClickListener(new View.OnClickListener() {
+            btnRetweet.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (username.length() > 0) {
-                        Intent i = new Intent(context, ComposeActivity.class);
-                        i.putExtra("type", "reply");
-                        i.putExtra("username", "@" + username);
-                        context.startActivity(i);
-                    }
+                    reply();
                 }
             });
 
@@ -129,6 +148,16 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
                 context.startActivity(intent);
             }
         }
+
+        private void reply() {
+            if (tweet.user.screenName.length() > 0) {
+                Intent i = new Intent(context, ComposeActivity.class);
+                i.putExtra("type", "reply");
+                i.putExtra("username", "@" + tweet.user.screenName);
+                context.startActivity(i);
+            }
+        }
+
 
     }
 
