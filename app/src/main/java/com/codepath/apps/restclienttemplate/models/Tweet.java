@@ -20,6 +20,7 @@ public class Tweet {
     public String createdAt;
     public String favoriteCount;
     public String retweetCount;
+    public String favorited;
 
 
     //constructor for Parcel
@@ -37,6 +38,7 @@ public class Tweet {
         tweet.createdAt = jsonObject.getString("created_at");
         tweet.favoriteCount = jsonObject.getString("favorite_count");
         tweet.retweetCount = jsonObject.getString("retweet_count");
+        tweet.favorited = jsonObject.getString("favorited");
 
         tweet.user = User.fromJSON(jsonObject.getJSONObject("user"));
 
