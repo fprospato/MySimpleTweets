@@ -34,6 +34,8 @@ public class TimelineActivity extends AppCompatActivity {
 
     //instances
     private SwipeRefreshLayout swipeContainer;
+    private EndlessRecyclerViewScrollListener scrollListener;
+
     MenuItem miActionProgressItem;
     MenuItem tweetItem;
 
@@ -55,12 +57,30 @@ public class TimelineActivity extends AppCompatActivity {
         client = TwitterApp.getRestClient(this);
 
         rvTweets = findViewById(R.id.rvTweet);
-        rvTweets.setLayoutManager(new LinearLayoutManager(this));
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        rvTweets.setLayoutManager(linearLayoutManager);
 
         tweets = new ArrayList<>();
         tweetAdapter = new TweetAdapter(tweets);
         rvTweets.setAdapter(tweetAdapter);
 
+        setupDesign();
+
+        populateTimeline();
+
+        setupSwipeForReload();
+
+        scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                populateMoreTimeline();
+            }
+        };
+
+        rvTweets.addOnScrollListener(scrollListener);
+    }
+
+    private void setupDesign() {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.twitter_blue)));
 
@@ -68,10 +88,6 @@ public class TimelineActivity extends AppCompatActivity {
         DividerItemDecoration itemDecorHorizontal = new DividerItemDecoration(rvTweets.getContext(), 0);
         rvTweets.addItemDecoration(itemDecorVertical);
         rvTweets.addItemDecoration(itemDecorHorizontal);
-
-        setupSwipeForReload();
-
-        populateTimeline();
     }
 
 
@@ -121,6 +137,56 @@ public class TimelineActivity extends AppCompatActivity {
                     }
                 }
                hideProgressBar();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                Log.d(TAG, responseString);
+                throwable.printStackTrace();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
+                Log.d(TAG, errorResponse.toString());
+                throwable.printStackTrace();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                Log.d(TAG, errorResponse.toString());
+                throwable.printStackTrace();
+            }
+        });
+    }
+
+
+    private void populateMoreTimeline() {
+        long lastTweetId = tweets.get(tweets.size() - 1).uid;
+
+        client.getMoreHomeTimeline(lastTweetId, new JsonHttpResponseHandler() {
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Log.d(TAG, response.toString());
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                Log.d(TAG, response.toString());
+
+                for (int i = 0; i < response.length(); i++) {
+                    try {
+                        Tweet tweet = Tweet.fromJSON(response.getJSONObject(i));
+
+                        tweets.add(tweet);
+
+                        tweetAdapter.notifyItemInserted(tweets.size()-1);
+                    } catch (JSONException e) {
+                        hideProgressBar();
+                        e.printStackTrace();
+                    }
+                }
+                hideProgressBar();
             }
 
             @Override
