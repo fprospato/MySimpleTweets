@@ -36,7 +36,8 @@ public class TimelineActivity extends AppCompatActivity {
     private SwipeRefreshLayout swipeContainer;
     MenuItem miActionProgressItem;
     MenuItem tweetItem;
-    private TwitterClient client;
+
+    public static TwitterClient client;
     TweetAdapter tweetAdapter;
     ArrayList<Tweet> tweets;
     RecyclerView rvTweets;
@@ -171,14 +172,12 @@ public class TimelineActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        //get sent tweet
         if (resultCode == COMPOSE_ACTIVITY_REQUEST && requestCode == COMPOSE_ACTIVITY_REQUEST) {
             Tweet tweet = data.getExtras().getParcelable("tweet");
 
             tweets.add(0, tweet);
             tweetAdapter.notifyItemInserted(tweets.size()-1);
 
-            //scroll to the top
             rvTweets.scrollToPosition(0);
         }
     }

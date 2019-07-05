@@ -37,6 +37,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
 
     public TweetAdapter(ArrayList<Tweet> tweets) {
         this.mTweets = tweets;
+        client = TimelineActivity.client;
     }
 
 
@@ -48,7 +49,6 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         context = viewGroup.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
-
 
         View tweetView = inflater.inflate(R.layout.item_tweet, viewGroup, false);
         ViewHolder viewHolder = new ViewHolder(tweetView);
@@ -103,6 +103,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         public ImageView ivComment;
         public ImageView ivFavorite;
         public Button btnRetweet;
+        public Button btnFav;
         Tweet tweet;
 
         public  ViewHolder(View itemView) {
@@ -116,11 +117,23 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
             ivComment = itemView.findViewById(R.id.ivComment);
             btnRetweet = itemView.findViewById(R.id.btnRetweet);
             ivFavorite = itemView.findViewById(R.id.ivFavorite);
+            btnFav = itemView.findViewById(R.id.btnFav);
 
             btnRetweet.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     reply();
+                }
+            });
+
+            btnFav.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (!tweet.favorited.equals("true")) {
+                        sendFav();
+                    } else {
+                        deleteFav();
+                    }
                 }
             });
 
@@ -158,6 +171,70 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
             }
         }
 
+        private void sendFav() {
+            client.sendFavorite(String.valueOf(tweet.uid), new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    Log.d("TwitterClient", response.toString());
+
+                    Integer currentCount = Integer.valueOf(tvFavorite.getText().toString());
+                    currentCount++;
+                    tvFavorite.setText(String.valueOf(currentCount));
+
+                    ivFavorite.setImageResource(R.drawable.ic_vector_heart);
+
+                    tweet.favorited = "true";
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    Log.d("TwitterClient", errorResponse.toString());
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
+                    Log.d("TwitterClient", errorResponse.toString());
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    Log.d("TwitterClient", responseString);
+                }
+            });
+        }
+
+
+        private void deleteFav() {
+            client.deleteFavorite(String.valueOf(tweet.uid), new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    Log.d("TwitterClient", response.toString());
+
+                    Integer currentCount = Integer.valueOf(tvFavorite.getText().toString());
+                    currentCount--;
+                    tvFavorite.setText(String.valueOf(currentCount));
+
+                    ivFavorite.setImageResource(R.drawable.ic_vector_heart_stroke);
+
+                    tweet.favorited = "false";
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    Log.d("TwitterClient", errorResponse.toString());
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
+                    Log.d("TwitterClient", errorResponse.toString());
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    Log.d("TwitterClient", responseString);
+                }
+            });
+        }
 
     }
 
