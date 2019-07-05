@@ -29,7 +29,7 @@
         android:id="@+id/tvName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="12dp"
         android:layout_marginEnd="10dp"
         android:text="Fullname"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
@@ -121,5 +121,17 @@
         android:textSize="15sp"
         app:layout_constraintStart_toEndOf="@+id/tvFollowerCount"
         app:layout_constraintTop_toTopOf="@+id/tvFollowerCount" />
+
+    <Button
+        android:id="@+id/btnFollow"
+        style="@style/Widget.AppCompat.Button"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_marginTop="5dp"
+        android:background="@color/twitter_blue"
+        android:text="Following"
+        android:textColor="#FFFFFF"
+        app:layout_constraintEnd_toEndOf="@+id/tvName"
+        app:layout_constraintTop_toBottomOf="@+id/ivBackgroundImage" />
 
 </android.support.constraint.ConstraintLayout>

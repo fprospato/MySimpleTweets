@@ -32,9 +32,11 @@ public class DetailActivity extends AppCompatActivity {
     TextView tvBody;
     TextView tvRetweetCount;
     TextView tvFavCount;
+    ImageView ivFav;
+
     Button btnReply;
     Button btnFav;
-    ImageView ivFav;
+    Button btnProfile;
 
     Tweet tweet;
 
@@ -58,6 +60,7 @@ public class DetailActivity extends AppCompatActivity {
         btnReply = findViewById(R.id.btnReply);
         btnFav = findViewById(R.id.btnFav);
         ivFav = findViewById(R.id.ivFav);
+        btnProfile = findViewById(R.id.btnProfile);
 
         tweet = Parcels.unwrap(getIntent().getParcelableExtra("tweet"));
 
@@ -109,6 +112,27 @@ public class DetailActivity extends AppCompatActivity {
                 } else {
                     deleteFav();
                 }
+            }
+        });
+
+        btnProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToProfileView();
+            }
+        });
+
+        tvName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToProfileView();
+            }
+        });
+
+        tvUsername.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToProfileView();
             }
         });
     }
@@ -176,5 +200,11 @@ public class DetailActivity extends AppCompatActivity {
                 Log.d("TwitterClient", responseString);
             }
         });
+    }
+
+    private void goToProfileView() {
+        Intent i = new Intent(getApplicationContext(), ProfileActivity.class);
+        i.putExtra("user", Parcels.wrap(tweet.user));
+        startActivity(i);
     }
 }

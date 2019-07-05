@@ -17,6 +17,7 @@ public class User {
     public String profileImageUrl;
     public String backgroundImageUrl;
 
+    public Boolean following;
     public String description;
     public String created_at;
     public int friendCount;
@@ -39,9 +40,11 @@ public class User {
         user.profileImageUrl = json.getString("profile_image_url_https");
         user.backgroundImageUrl = json.getString("profile_banner_url");
 
+        user.following = json.getBoolean("following");
         user.description = json.getString("description");
         user.friendCount = json.getInt("friends_count");
         user.followerCount = json.getInt("followers_count");
+
 
         String createdAt = json.getString("created_at");
         user.created_at = getJoinedDate(createdAt);
