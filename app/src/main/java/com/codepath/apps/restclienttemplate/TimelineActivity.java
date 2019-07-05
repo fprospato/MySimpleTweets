@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.widget.ProgressBar;
 
 import com.codepath.apps.restclienttemplate.models.Tweet;
+import com.codepath.apps.restclienttemplate.models.User;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONArray;
@@ -31,6 +32,7 @@ public class TimelineActivity extends AppCompatActivity {
 
     //constants
     public final static String TAG = "TimelineActivity";
+    static final int COMPOSE_ACTIVITY_REQUEST= 1;
 
     //instances
     private SwipeRefreshLayout swipeContainer;
@@ -44,9 +46,7 @@ public class TimelineActivity extends AppCompatActivity {
     ArrayList<Tweet> tweets;
     RecyclerView rvTweets;
 
-
-    //request code for startActivity
-    static final int COMPOSE_ACTIVITY_REQUEST= 1;  // The request code
+    public User currentUser;
 
 
     @Override
@@ -63,6 +63,8 @@ public class TimelineActivity extends AppCompatActivity {
         tweets = new ArrayList<>();
         tweetAdapter = new TweetAdapter(tweets);
         rvTweets.setAdapter(tweetAdapter);
+
+        getCurrentUser();
 
         setupDesign();
 
@@ -83,6 +85,11 @@ public class TimelineActivity extends AppCompatActivity {
     private void setupDesign() {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.twitter_blue)));
+
+        actionBar.setDisplayShowHomeEnabled(true);
+        actionBar.setTitle("");
+        actionBar.setLogo(R.drawable.ic_icon);
+        actionBar.setDisplayUseLogoEnabled(true);
 
         DividerItemDecoration itemDecorVertical = new DividerItemDecoration(rvTweets.getContext(), 1);
         DividerItemDecoration itemDecorHorizontal = new DividerItemDecoration(rvTweets.getContext(), 0);
@@ -106,6 +113,46 @@ public class TimelineActivity extends AppCompatActivity {
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
+    }
+
+
+    private void getCurrentUser() {
+        client.getCurrentUser(new JsonHttpResponseHandler(){
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Log.d(TAG, response.toString());
+
+                try {
+                    currentUser = User.fromJSON(response);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                Log.d(TAG, response.toString());
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                Log.d(TAG, responseString);
+                throwable.printStackTrace();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
+                Log.d(TAG, errorResponse.toString());
+                throwable.printStackTrace();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                Log.d(TAG, errorResponse.toString());
+                throwable.printStackTrace();
+            }
+        });
     }
 
 

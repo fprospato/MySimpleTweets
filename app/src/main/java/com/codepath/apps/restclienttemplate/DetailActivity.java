@@ -51,7 +51,7 @@ public class DetailActivity extends AppCompatActivity {
 
         ivProfileImage = findViewById(R.id.ivProfileImage);
         tvName = findViewById(R.id.tvName);
-        tvUsername = findViewById(R.id.tvUsername);
+        tvUsername = findViewById(R.id.tvBio);
         tvBody = findViewById(R.id.tvBody);
         tvRetweetCount = findViewById(R.id.tvRetweetCount);
         tvFavCount = findViewById(R.id.tvFavCount);

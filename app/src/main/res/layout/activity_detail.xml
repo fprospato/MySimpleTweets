@@ -24,7 +24,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/tvUsername"
+        android:id="@+id/tvBio"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
@@ -63,7 +63,7 @@
         android:linksClickable="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvUsername" />
+        app:layout_constraintTop_toBottomOf="@+id/tvBio" />
 
     <TextView
         android:id="@+id/textView2"

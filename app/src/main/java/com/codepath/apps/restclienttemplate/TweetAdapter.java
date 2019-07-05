@@ -104,6 +104,8 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         public ImageView ivFavorite;
         public Button btnRetweet;
         public Button btnFav;
+        public Button btnProfile;
+
         Tweet tweet;
 
         public  ViewHolder(View itemView) {
@@ -115,10 +117,18 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
             tvRetweet = itemView.findViewById(R.id.tvRetweet);
             tvFavorite = itemView.findViewById(R.id.tvFavorite);
             ivComment = itemView.findViewById(R.id.ivComment);
-            btnRetweet = itemView.findViewById(R.id.btnRetweet);
             ivFavorite = itemView.findViewById(R.id.ivFavorite);
-            btnFav = itemView.findViewById(R.id.btnFav);
 
+            btnRetweet = itemView.findViewById(R.id.btnRetweet);
+            btnFav = itemView.findViewById(R.id.btnFav);
+            btnProfile = itemView.findViewById(R.id.btnProfile);
+
+            setupButtons();
+
+            itemView.setOnClickListener(this);
+        }
+
+        private void setupButtons() {
             btnRetweet.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -137,7 +147,12 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
                 }
             });
 
-            itemView.setOnClickListener(this);
+            btnProfile.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    goToProfileView();
+                }
+            });
         }
 
         @Override
@@ -234,6 +249,15 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
                     Log.d("TwitterClient", responseString);
                 }
             });
+        }
+
+
+        private void goToProfileView() {
+            if (tweet.user.screenName.length() > 0) {
+                Intent i = new Intent(context, ProfileActivity.class);
+                i.putExtra("user", Parcels.wrap(tweet.user));
+                context.startActivity(i);
+            }
         }
 
     }

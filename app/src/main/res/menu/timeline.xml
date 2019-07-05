@@ -17,5 +17,4 @@
         app:showAsAction="ifRoom"
         app:actionLayout="@layout/action_view_progress" />
 
-
 </menu>
