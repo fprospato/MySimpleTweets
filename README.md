@@ -51,12 +51,13 @@ The following **additional** features are implemented:
 * [x] UI improvements throughout the app
 * [x] See a users following / followers from a profile view
 * [x] Go to any users profile from another users profile list
+* [x] Works in landscape mode
 
 ## Video Walkthrough
 
 Here's a walkthrough of implemented user stories:
 
-<img src='http://i.imgur.com/link/to/your/gif/file.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<img src='https://github.com/fprospato/MySimpleTweets/blob/master/walkthrough.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
