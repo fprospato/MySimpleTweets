@@ -90,7 +90,7 @@ public class ComposeActivity extends AppCompatActivity {
         if (type.equals("reply")) {
             String username = getIntent().getStringExtra("username");
 
-            etTweetText.setText(username);
+            etTweetText.setText(username + " ");
             etTweetText.setHint("Tweet your reply");
 
             tvReply.setVisibility(View.VISIBLE);

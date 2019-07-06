@@ -1,5 +1,6 @@
 package com.codepath.apps.restclienttemplate;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -20,6 +21,9 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.parceler.Parcels;
 
+import java.text.NumberFormat;
+import java.util.Locale;
+
 import cz.msebera.android.httpclient.Header;
 
 public class ProfileActivity extends AppCompatActivity {
@@ -33,6 +37,7 @@ public class ProfileActivity extends AppCompatActivity {
     TextView tvFriendCount;
     TextView tvFollowerCount;
     Button btnFollow;
+    Button btnFollowing;
 
     private TwitterClient client;
     User user;
@@ -55,6 +60,7 @@ public class ProfileActivity extends AppCompatActivity {
         tvFollowerCount = findViewById(R.id.tvFollowerCount);
         ivBackgroundImage = findViewById(R.id.ivBackgroundImage);
         btnFollow = findViewById(R.id.btnFollow);
+        btnFollowing = findViewById(R.id.btnFollowing);
 
         setupActionBar();
 
@@ -68,6 +74,13 @@ public class ProfileActivity extends AppCompatActivity {
                 } else {
                     deleteFollow();
                 }
+            }
+        });
+
+        btnFollowing.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToFollowView();
             }
         });
     }
@@ -87,8 +100,10 @@ public class ProfileActivity extends AppCompatActivity {
         tvUsername.setText("@" + user.screenName);
         tvBio.setText(user.description);
         tvJoined.setText("Joined " + user.created_at);
-        tvFriendCount.setText(String.valueOf(user.friendCount));
-        tvFollowerCount.setText(String.valueOf(user.followerCount));
+
+        NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.US);
+        tvFriendCount.setText(String.valueOf(numberFormat.format(user.friendCount)));
+        tvFollowerCount.setText(String.valueOf(numberFormat.format(user.followerCount)));
 
         Glide.with(getApplicationContext())
                 .load(user.profileImageUrl)
@@ -156,6 +171,12 @@ public class ProfileActivity extends AppCompatActivity {
                 Log.d("TwitterClient", responseString);
             }
         });
+    }
+
+    private void goToFollowView() {
+        Intent i = new Intent(getApplicationContext(), FollowActivity.class);
+        i.putExtra("user", Parcels.wrap(user));
+        startActivity(i);
     }
 
 

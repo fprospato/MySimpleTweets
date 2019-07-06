@@ -38,7 +38,11 @@ public class User {
         user.uid = json.getLong("id");
         user.screenName = json.getString("screen_name");
         user.profileImageUrl = json.getString("profile_image_url_https");
-        user.backgroundImageUrl = json.getString("profile_banner_url");
+
+        //have to check first because 'profile_banner_url' is not in json if user doesn't have one
+        if (json.has("profile_banner_url")) {
+            user.backgroundImageUrl = json.getString("profile_banner_url");
+        }
 
         user.following = json.getBoolean("following");
         user.description = json.getString("description");

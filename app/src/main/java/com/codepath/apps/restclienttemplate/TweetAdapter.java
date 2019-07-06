@@ -157,22 +157,15 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
 
         @Override
         public void onClick(View view) {
-            // get item position
             int position = getAdapterPosition();
 
-            // check for valid position (actually is in the view)
             if (position != RecyclerView.NO_POSITION) {
 
-                // get movie from the position (won't work if the class is static)
                 Tweet tweet = mTweets.get(position);
 
-                // create intent for the new activity
                 Intent intent = new Intent(context, DetailActivity.class);
-
-                // serialize the movie using parceler, use its short name as a key
                 intent.putExtra("tweet", Parcels.wrap(tweet));
 
-                // show the activity
                 context.startActivity(intent);
             }
         }
