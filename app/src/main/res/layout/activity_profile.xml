@@ -144,4 +144,14 @@
         app:layout_constraintStart_toStartOf="@+id/tvFriendCount"
         app:layout_constraintTop_toBottomOf="@+id/tvJoined" />
 
+    <Button
+        android:id="@+id/btnFollowers"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:layout_marginTop="5dp"
+        app:layout_constraintEnd_toEndOf="@+id/textView10"
+        app:layout_constraintStart_toStartOf="@+id/tvFollowerCount"
+        app:layout_constraintTop_toBottomOf="@+id/tvJoined" />
+
 </android.support.constraint.ConstraintLayout>

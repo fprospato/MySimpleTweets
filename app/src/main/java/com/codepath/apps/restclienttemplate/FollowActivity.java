@@ -4,6 +4,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
@@ -24,8 +25,9 @@ public class FollowActivity extends AppCompatActivity {
     public final static String TAG = "FollowActivity";
 
     public static TwitterClient client;
-    //TweetAdapter tweetAdapter;
+    FollowAdapter followAdapter;
     User user;
+    Boolean isFriendsList;
     ArrayList<User> users;
     RecyclerView rvFollow;
 
@@ -36,14 +38,14 @@ public class FollowActivity extends AppCompatActivity {
 
         client = TwitterApp.getRestClient(this);
         user = Parcels.unwrap(getIntent().getParcelableExtra("user"));
+        isFriendsList = getIntent().getBooleanExtra("isFriendsList", false);
 
-        rvFollow = findViewById(R.id.rvTweet);
-//        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-//        rvFollow.setLayoutManager(linearLayoutManager);
+        rvFollow = findViewById(R.id.rvFollow);
+        rvFollow.setLayoutManager(new LinearLayoutManager(this));
 
         users = new ArrayList<>();
-//        tweetAdapter = new TweetAdapter(users);
-//        rvFollow.setAdapter(tweetAdapter);
+        followAdapter = new FollowAdapter(users);
+        rvFollow.setAdapter(followAdapter);
 
         setupActionBar();
 
@@ -61,7 +63,7 @@ public class FollowActivity extends AppCompatActivity {
     }
 
     private void getFollows() {
-        client.getFollows(user.uid, true, new JsonHttpResponseHandler() {
+        client.getFollows(user.uid, isFriendsList, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 Log.d(TAG, response.toString());
@@ -72,6 +74,7 @@ public class FollowActivity extends AppCompatActivity {
                         User user = User.fromJSON(usersJSONArray.getJSONObject(i));
 
                         users.add(user);
+                        followAdapter.notifyItemInserted(users.size()-1);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();

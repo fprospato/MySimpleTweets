@@ -38,6 +38,7 @@ public class ProfileActivity extends AppCompatActivity {
     TextView tvFollowerCount;
     Button btnFollow;
     Button btnFollowing;
+    Button btnFollowers;
 
     private TwitterClient client;
     User user;
@@ -61,11 +62,17 @@ public class ProfileActivity extends AppCompatActivity {
         ivBackgroundImage = findViewById(R.id.ivBackgroundImage);
         btnFollow = findViewById(R.id.btnFollow);
         btnFollowing = findViewById(R.id.btnFollowing);
+        btnFollowers = findViewById(R.id.btnFollowers);
 
         setupActionBar();
 
         populateView();
 
+        setupButtons();
+    }
+
+
+    private void setupButtons() {
         btnFollow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -80,7 +87,14 @@ public class ProfileActivity extends AppCompatActivity {
         btnFollowing.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goToFollowView();
+                goToFollowView(true);
+            }
+        });
+
+        btnFollowers.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToFollowView(false);
             }
         });
     }
@@ -173,9 +187,10 @@ public class ProfileActivity extends AppCompatActivity {
         });
     }
 
-    private void goToFollowView() {
+    private void goToFollowView(Boolean isFriendsList) {
         Intent i = new Intent(getApplicationContext(), FollowActivity.class);
         i.putExtra("user", Parcels.wrap(user));
+        i.putExtra("isFriendsList", isFriendsList);
         startActivity(i);
     }
 
