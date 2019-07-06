@@ -1,6 +1,7 @@
 package com.codepath.apps.restclienttemplate;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,6 +13,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.codepath.apps.restclienttemplate.models.User;
+
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 
@@ -54,7 +57,7 @@ public class FollowAdapter extends RecyclerView.Adapter<FollowAdapter.ViewHolder
         return mUsers.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public ImageView ivProfileImage;
         public TextView tvName;
         public TextView tvUsername;
@@ -67,6 +70,23 @@ public class FollowAdapter extends RecyclerView.Adapter<FollowAdapter.ViewHolder
             tvName = itemView.findViewById(R.id.tvName);
             tvUsername = itemView.findViewById(R.id.tvUsername);
             tvBio = itemView.findViewById(R.id.tvBio);
+
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            int position = getAdapterPosition();
+
+            if (position != RecyclerView.NO_POSITION) {
+
+                User user = mUsers.get(position);
+
+                Intent intent = new Intent(context, ProfileActivity.class);
+                intent.putExtra("user", Parcels.wrap(user));
+
+                context.startActivity(intent);
+            }
         }
     }
 }
